@@ -1,0 +1,178 @@
+Q1
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Activity Life Cycle Demo"
+        android:textSize="20sp"/>
+
+</LinearLayout>
+MainActivity.java
+package com.example.lifecycleapp;
+
+import android.os.Bundle;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toast.makeText(this, "onCreate()", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Toast.makeText(this, "onStart()", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(this, "onResume()", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Toast.makeText(this, "onPause()", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Toast.makeText(this, "onStop()", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Toast.makeText(this, "onRestart()", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(this, "onDestroy()", Toast.LENGTH_SHORT).show();
+    }
+}
+Q2
+config.xml (Add Contacts Plugin)
+<plugin name="cordova-plugin-contacts" spec="latest" />
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contacts App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="cordova.js"></script>
+</head>
+
+<body>
+
+<h2>Contact Application</h2>
+
+<input type="text" id="name" placeholder="Enter Name"><br><br>
+<input type="text" id="phone" placeholder="Enter Phone"><br><br>
+
+<button onclick="createContact()">Create Contact</button>
+<button onclick="searchContact()">Search Contact</button>
+<button onclick="cloneContact()">Clone Contact</button>
+<button onclick="deleteContact()">Delete Contact</button>
+
+<script src="index.js"></script>
+
+</body>
+</html>
+index.js
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+    console.log("Device Ready");
+}
+
+// Create Contact
+function createContact() {
+    var name = document.getElementById("name").value;
+    var phone = document.getElementById("phone").value;
+
+    var contact = navigator.contacts.create();
+    contact.displayName = name;
+
+    var phoneNumbers = [];
+    phoneNumbers[0] = new ContactField('mobile', phone, true);
+    contact.phoneNumbers = phoneNumbers;
+
+    contact.save(function() {
+        alert("Contact Saved");
+    }, function() {
+        alert("Error Saving Contact");
+    });
+}
+
+// Search Contact
+function searchContact() {
+    var name = document.getElementById("name").value;
+
+    var options = new ContactFindOptions();
+    options.filter = name;
+    options.multiple = true;
+
+    var fields = ["displayName"];
+
+    navigator.contacts.find(fields, function(contacts) {
+        if (contacts.length > 0) {
+            alert("Contact Found: " + contacts[0].displayName);
+        } else {
+            alert("No Contact Found");
+        }
+    }, function() {
+        alert("Search Failed");
+    }, options);
+}
+
+// Clone Contact
+function cloneContact() {
+    var contact = navigator.contacts.create({"displayName": "Clone User"});
+    var cloned = contact.clone();
+    cloned.save(function() {
+        alert("Contact Cloned");
+    }, function() {
+        alert("Clone Failed");
+    });
+}
+
+// Delete Contact
+function deleteContact() {
+    var name = document.getElementById("name").value;
+
+    var options = new ContactFindOptions();
+    options.filter = name;
+    options.multiple = true;
+
+    navigator.contacts.find(["displayName"], function(contacts) {
+        if (contacts.length > 0) {
+            contacts[0].remove(function() {
+                alert("Contact Deleted");
+            }, function() {
+                alert("Delete Failed");
+            });
+        } else {
+            alert("No Contact Found");
+        }
+    }, function() {
+        alert("Search Failed");
+    }, options);
+}
