@@ -1,0 +1,170 @@
+Q1
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/img1"/>
+
+    <Button
+        android:id="@+id/btnChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Image"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>
+
+MainActivity.java
+package com.example.imagechange;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ImageView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    ImageView imageView;
+    Button btnChange;
+    boolean flag = true;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        imageView = findViewById(R.id.imageView);
+        btnChange = findViewById(R.id.btnChange);
+
+        btnChange.setOnClickListener(v -> {
+
+            if (flag) {
+                imageView.setImageResource(R.drawable.img2);
+                flag = false;
+            } else {
+                imageView.setImageResource(R.drawable.img1);
+                flag = true;
+            }
+        });
+    }
+}
+Q2
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Number"
+        android:inputType="number" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rbOddEven"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Odd or Even" />
+
+        <RadioButton
+            android:id="@+id/rbPosNeg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Positive or Negative" />
+
+        <RadioButton
+            android:id="@+id/rbSquare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Square" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click" />
+
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Answer"
+        android:textSize="18sp"
+        android:paddingTop="10dp"/>
+
+</LinearLayout>
+MainActivity.java
+package com.example.radiobuttonapp;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText num;
+    RadioButton rbOddEven, rbPosNeg, rbSquare;
+    Button btn;
+    TextView result;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        num = findViewById(R.id.num);
+        rbOddEven = findViewById(R.id.rbOddEven);
+        rbPosNeg = findViewById(R.id.rbPosNeg);
+        rbSquare = findViewById(R.id.rbSquare);
+        btn = findViewById(R.id.btnClick);
+        result = findViewById(R.id.result);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int number = Integer.parseInt(num.getText().toString());
+
+                if (rbOddEven.isChecked()) {
+                    if (number % 2 == 0)
+                        result.setText("Number is Even");
+                    else
+                        result.setText("Number is Odd");
+                }
+
+                else if (rbPosNeg.isChecked()) {
+                    if (number >= 0)
+                        result.setText("Number is Positive");
+                    else
+                        result.setText("Number is Negative");
+                }
+
+                else if (rbSquare.isChecked()) {
+                    int square = number * number;
+                    result.setText("Square = " + square);
+                }
+            }
+        });
+    }
+}
+
