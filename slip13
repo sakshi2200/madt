@@ -1,0 +1,236 @@
+Q1
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registration Form"
+        android:textSize="22sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Name"/>
+
+    <EditText
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Address"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/mobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Mobile No"
+        android:inputType="phone"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Age"
+        android:inputType="number"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>
+
+MainActivity.java
+package com.example.registration;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText name, address, mobile, age;
+    Button register;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        name = findViewById(R.id.name);
+        address = findViewById(R.id.address);
+        mobile = findViewById(R.id.mobile);
+        age = findViewById(R.id.age);
+        register = findViewById(R.id.register);
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String n = name.getText().toString();
+                String a = address.getText().toString();
+                String m = mobile.getText().toString();
+                String ag = age.getText().toString();
+
+                // Validation
+                if (n.isEmpty()) {
+                    name.setError("Enter Name");
+                } else if (a.isEmpty()) {
+                    address.setError("Enter Address");
+                } else if (m.isEmpty() || m.length() != 10) {
+                    mobile.setError("Enter Valid Mobile No");
+                } else if (ag.isEmpty()) {
+                    age.setError("Enter Age");
+                } else {
+                    Toast.makeText(MainActivity.this,
+                            "Registration Successful",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}
+
+Q2
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/inputItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Item"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/btnInsert"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Insert"/>
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Delete"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:layout_marginTop="10dp"/>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>
+MainActivity.java
+package com.example.listviewapp;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText inputItem;
+    Button btnInsert, btnDelete, btnSearch;
+    ListView listView;
+
+    ArrayList<String> list;
+    ArrayAdapter<String> adapter;
+    int selectedPosition = -1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        inputItem = findViewById(R.id.inputItem);
+        btnInsert = findViewById(R.id.btnInsert);
+        btnDelete = findViewById(R.id.btnDelete);
+        btnSearch = findViewById(R.id.btnSearch);
+        listView = findViewById(R.id.listView);
+
+        list = new ArrayList<>();
+        list.add("Apple");
+        list.add("Banana");
+
+        adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, list);
+        listView.setAdapter(adapter);
+
+        // Select item
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            selectedPosition = position;
+            inputItem.setText(list.get(position));
+        });
+
+        // Insert
+        btnInsert.setOnClickListener(v -> {
+            String item = inputItem.getText().toString();
+            if (!item.isEmpty()) {
+                list.add(item);
+                adapter.notifyDataSetChanged();
+                inputItem.setText("");
+                Toast.makeText(this, "Item Inserted", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Delete
+        btnDelete.setOnClickListener(v -> {
+            if (selectedPosition != -1) {
+                list.remove(selectedPosition);
+                adapter.notifyDataSetChanged();
+                inputItem.setText("");
+                selectedPosition = -1;
+                Toast.makeText(this, "Item Deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Search
+        btnSearch.setOnClickListener(v -> {
+            String item = inputItem.getText().toString();
+            if (list.contains(item)) {
+                Toast.makeText(this, "Item Found", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Item Not Found", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}
+
