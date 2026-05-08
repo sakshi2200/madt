@@ -1,0 +1,190 @@
+Q1
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/getnum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Number"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>
+
+MainActivity.java
+package com.example.armstrong;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText getnum;
+    Button check;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        getnum = findViewById(R.id.getnum);
+        check = findViewById(R.id.check);
+
+        check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num = Integer.parseInt(getnum.getText().toString());
+                int temp = num, sum = 0, rem;
+
+                while (temp > 0) {
+                    rem = temp % 10;
+                    sum = sum + (rem * rem * rem);
+                    temp = temp / 10;
+                }
+
+                if (sum == num) {
+                    Toast.makeText(MainActivity.this,
+                            "Armstrong Number", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this,
+                            "Not Armstrong Number", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}
+
+Q2
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Item:"/>
+
+    <EditText
+        android:id="@+id/itemInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter item"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/addBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Add to Spinner"/>
+
+        <Button
+            android:id="@+id/removeBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Remove from Spinner"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="See Response Below"
+        android:layout_marginTop="15dp"/>
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+ MainActivity.java
+package com.example.spinnerapp;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText itemInput;
+    Button addBtn, removeBtn;
+    Spinner spinner;
+
+    ArrayList<String> list;
+    ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        itemInput = findViewById(R.id.itemInput);
+        addBtn = findViewById(R.id.addBtn);
+        removeBtn = findViewById(R.id.removeBtn);
+        spinner = findViewById(R.id.spinner);
+
+        list = new ArrayList<>();
+        list.add("Apple");   // default item
+
+        adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, list);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        // Add item
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String item = itemInput.getText().toString();
+                if (!item.isEmpty()) {
+                    list.add(item);
+                    adapter.notifyDataSetChanged();
+                    itemInput.setText("");
+                    Toast.makeText(MainActivity.this,
+                            "Item Added", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // Remove selected item
+        removeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!list.isEmpty()) {
+                    int pos = spinner.getSelectedItemPosition();
+                    list.remove(pos);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(MainActivity.this,
+                            "Item Removed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}
