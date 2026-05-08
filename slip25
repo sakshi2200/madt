@@ -1,0 +1,132 @@
+Q1
+Step 1: Add Permission in AndroidManifest.xml
+<uses-permission android:name="android.permission.SEND_SMS"/>
+Step 2: activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/phone"
+        android:hint="Enter Phone Number"
+        android:inputType="phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/message"
+        android:hint="Enter Message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:text="Send SMS"
+        android:onClick="sendSMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+Step 3: MainActivity.java
+package com.example.smsapp;
+
+import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText phone, message;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        phone = findViewById(R.id.phone);
+        message = findViewById(R.id.message);
+    }
+
+    public void sendSMS(View view) {
+        String num = phone.getText().toString();
+        String msg = message.getText().toString();
+
+        try {
+            SmsManager sms = SmsManager.getDefault();
+            sms.sendTextMessage(num, null, msg, null, null);
+            Toast.makeText(this, "SMS Sent", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to send SMS", Toast.LENGTH_SHORT).show();
+        }
+    }
+}
+Q2
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="1"
+    android:padding="20dp">
+
+    <TableRow>
+        <TextView android:text="Username"/>
+        <EditText
+            android:id="@+id/username"
+            android:hint="Enter Username"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView android:text="Password"/>
+        <EditText
+            android:id="@+id/password"
+            android:hint="Enter Password"
+            android:inputType="textPassword"/>
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:text="LOGIN"
+            android:onClick="checkLogin"/>
+    </TableRow>
+
+</TableLayout>
+MainActivity.java
+package com.example.loginapp;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText username, password;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+    }
+
+    public void checkLogin(View view) {
+        String user = username.getText().toString();
+        String pass = password.getText().toString();
+
+        if (user.equals(pass)) {
+            Toast.makeText(this, "Login Successful...", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Invalid Login", Toast.LENGTH_LONG).show();
+        }
+    }
+}
